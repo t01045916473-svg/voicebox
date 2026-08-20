@@ -1,0 +1,29 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--rounded-full);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.default {
+  font-size: 13px;
+  line-height: 18px;
+  padding: 4px 10px;
+}
+
+.sm {
+  font-size: 11px;
+  line-height: 16px;
+  padding: 2px 8px;
+}
+
+.progress {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+
+.done {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}

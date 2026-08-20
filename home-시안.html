@@ -1,0 +1,626 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 동네 목소리함 · 홈 화면 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --bg:#FFF9F0;
+    --on-bg:#2B2438;
+    --surface:#FFFFFF;
+    --surface-container:#FFF3E2;
+    --surface-container-high:#FDEEDB;
+    --on-surface:#2B2438;
+    --on-surface-variant:#5C5566;
+    --outline:#E4DEE0;
+    --outline-variant:#EFEAEB;
+    --primary:#FF7A59;
+    --on-primary:#2B2438;
+    --primary-container:#FFE4DA;
+    --on-primary-container:#2B2438;
+    --secondary:#8A8296;
+    --on-secondary:#FFFFFF;
+    --secondary-container:#ECE9EF;
+    --on-secondary-container:#2B2438;
+    --error:#D14343;
+    --on-error:#FFFFFF;
+    --error-container:#FDE3E1;
+    --on-error-container:#7A241F;
+    --shadow-sm:0px 2px 8px rgba(43,36,56,0.08);
+    --shadow-md:0px 8px 24px rgba(43,36,56,0.12);
+    --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--on-surface);
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- 시안 전환 스위처 (실제 화면 밖 도구) ---------- */
+  .switcher{
+    position:sticky;top:0;z-index:100;
+    background:var(--on-bg);
+    color:#fff;
+    padding:10px 20px;
+  }
+  .switcher-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .switcher-title{
+    font-size:13px;font-weight:600;opacity:.7;white-space:nowrap;
+  }
+  .switcher-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+  .switcher-tabs button{
+    border:1px solid rgba(255,255,255,.25);
+    background:transparent;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:9999px;
+    font-size:13px;font-weight:600;
+    opacity:.7;
+    transition:all .15s ease;
+  }
+  .switcher-tabs button:hover{opacity:1;}
+  .switcher-tabs button.active{
+    background:var(--primary);
+    color:var(--on-primary);
+    border-color:var(--primary);
+    opacity:1;
+  }
+  .switcher-note{
+    font-size:12px;color:rgba(255,255,255,.55);
+    width:100%;
+  }
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ================= 공통 구조 ================= */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;}
+  .brand img{border-radius:8px;}
+  .brand span{font-weight:700;color:var(--on-bg);}
+
+  .hero{position:relative;overflow:hidden;}
+  .hero .btn-primary{
+    background:var(--primary);color:var(--on-primary);
+    border:none;border-radius:12px;font-weight:600;
+    letter-spacing:0.01em;
+  }
+
+  .status-tabs{display:flex;flex-wrap:wrap;}
+  .status-tab{
+    border-radius:9999px;font-weight:600;border:1px solid var(--outline);
+    background:var(--surface);color:var(--on-surface);
+  }
+  .status-tab.active{
+    background:var(--primary);color:var(--on-primary);border-color:var(--primary);
+  }
+
+  .category-chip{
+    border-radius:9999px;border:1px solid var(--outline);
+    background:var(--surface);color:var(--on-surface-variant);font-weight:500;
+  }
+  .category-chip.active{
+    background:var(--secondary);color:var(--on-secondary);border-color:var(--secondary);
+  }
+
+  .badge{
+    display:inline-flex;align-items:center;border-radius:9999px;
+    font-size:13px;font-weight:500;line-height:18px;padding:4px 10px;white-space:nowrap;
+  }
+  .badge-progress{background:var(--secondary-container);color:var(--on-secondary-container);}
+  .badge-done{background:var(--primary-container);color:var(--on-primary-container);}
+
+  .photo-placeholder{
+    background:var(--outline-variant);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--on-surface-variant);
+    flex-shrink:0;
+  }
+  .photo-placeholder svg{width:28%;height:28%;opacity:.55;}
+
+  .footer{
+    background:var(--surface-container);
+    color:var(--on-surface-variant);
+  }
+  .footer .foot-brand{color:var(--on-surface);font-weight:700;}
+
+  /* =========================================================
+     안 1 · 정보 우선형 — 정보 밀도 높음 / 사진 작게 / 차분한 안내 톤
+     ========================================================= */
+  .v1{
+    background:var(--bg);
+  }
+  .v1 .header{
+    max-width:1200px;margin:0 auto;padding:14px 20px;
+  }
+  .v1 .brand img{width:28px;height:28px;}
+  .v1 .brand span{font-size:15px;margin-left:8px;}
+
+  .v1 .hero{
+    background:var(--surface-container);
+    border-bottom:1px solid var(--outline-variant);
+  }
+  .v1 .hero-inner{
+    max-width:1200px;margin:0 auto;padding:20px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  }
+  .v1 .hero-text h1{
+    font-size:17px;font-weight:700;margin:0 0 4px;color:var(--on-bg);
+  }
+  .v1 .hero-text p{
+    font-size:13px;margin:0;color:var(--on-surface-variant);line-height:1.5;
+  }
+  .v1 .hero .btn-primary{padding:9px 16px;font-size:14px;flex-shrink:0;}
+
+  .v1 .filters{
+    max-width:1200px;margin:0 auto;padding:16px 20px 0;
+  }
+  .v1 .status-tabs{gap:6px;margin-bottom:10px;}
+  .v1 .status-tab{padding:6px 12px;font-size:13px;}
+  .v1 .category-row{
+    display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;
+    scrollbar-width:thin;
+  }
+  .v1 .category-chip{padding:5px 12px;font-size:12px;white-space:nowrap;}
+
+  .v1 .list-section{max-width:1200px;margin:0 auto;padding:12px 20px 40px;}
+  .v1 .section-label{font-size:12px;color:var(--on-surface-variant);margin:8px 0 10px;font-weight:600;}
+  .v1 .card-grid{
+    display:grid;grid-template-columns:1fr;gap:8px;
+  }
+  @media(min-width:768px){ .v1 .card-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(min-width:1024px){ .v1 .card-grid{grid-template-columns:repeat(3,1fr);} }
+
+  .v1 .card{
+    display:flex;gap:10px;background:var(--surface);
+    border:1px solid var(--outline-variant);border-radius:10px;
+    padding:10px;box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s ease;
+  }
+  .v1 .card:hover{box-shadow:var(--shadow-md);}
+  .v1 .card .photo-placeholder{width:56px;height:56px;border-radius:8px;}
+  .v1 .card .photo-placeholder svg{width:22px;height:22px;}
+  .v1 .card-body{min-width:0;flex:1;}
+  .v1 .card-top{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+  .v1 .card-title{
+    font-size:14px;font-weight:700;margin:0;color:var(--on-surface);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .v1 .card-excerpt{
+    font-size:12px;color:var(--on-surface-variant);margin:0 0 6px;line-height:1.4;
+    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;
+  }
+  .v1 .card-meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--on-surface-variant);flex-wrap:wrap;}
+  .v1 .card-meta .cat{color:var(--secondary);font-weight:600;}
+  .v1 .badge{font-size:11px;padding:2px 8px;}
+
+  .v1 .footer{padding:24px 20px;margin-top:0;}
+  .v1 .footer-inner{max-width:1200px;margin:0 auto;font-size:12px;line-height:1.6;}
+  .v1 .foot-brand{font-size:13px;}
+
+  /* =========================================================
+     안 2 · 이야기 중심형 — 정보 밀도 낮음(여유) / 사진 크게 / 강한 한 줄 히어로
+     ========================================================= */
+  .v2{background:var(--bg);}
+  .v2 .header{max-width:1200px;margin:0 auto;padding:22px 20px 0;}
+  .v2 .brand img{width:36px;height:36px;}
+  .v2 .brand span{font-size:17px;margin-left:10px;}
+
+  .v2 .hero{
+    max-width:1200px;margin:24px auto 0;padding:0 20px;
+  }
+  .v2 .hero-panel{
+    background:var(--primary-container);
+    border-radius:20px;
+    padding:40px 32px;
+    display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;
+    position:relative;
+  }
+  .v2 .hero-panel h1{
+    font-size:32px;font-weight:700;line-height:1.3;margin:0 0 12px;color:var(--on-primary-container);
+    max-width:520px;
+  }
+  .v2 .hero-panel p{
+    font-size:16px;margin:0 0 24px;color:var(--on-surface-variant);max-width:480px;line-height:1.6;
+  }
+  .v2 .hero .btn-primary{padding:14px 28px;font-size:16px;}
+  .v2 .hero-icon{
+    width:120px;height:120px;border-radius:24px;background:var(--surface);
+    display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);flex-shrink:0;
+  }
+  .v2 .hero-icon img{width:64px;height:64px;}
+
+  .v2 .filters{max-width:1200px;margin:0 auto;padding:36px 20px 0;}
+  .v2 .filters-label{font-size:13px;font-weight:700;color:var(--on-surface-variant);margin-bottom:10px;}
+  .v2 .status-tabs{gap:8px;margin-bottom:16px;}
+  .v2 .status-tab{padding:10px 18px;font-size:15px;}
+  .v2 .category-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .v2 .category-chip{padding:8px 16px;font-size:14px;}
+
+  .v2 .list-section{max-width:1200px;margin:0 auto;padding:32px 20px 56px;}
+  .v2 .card-grid{display:grid;grid-template-columns:1fr;gap:24px;}
+  @media(min-width:768px){ .v2 .card-grid{grid-template-columns:repeat(2,1fr);gap:28px;} }
+  @media(min-width:1024px){ .v2 .card-grid{grid-template-columns:repeat(2,1fr);gap:32px;} }
+
+  .v2 .card{
+    background:var(--surface);border:1px solid var(--outline-variant);
+    border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s ease;
+  }
+  .v2 .card:hover{box-shadow:var(--shadow-md);}
+  .v2 .card .photo-placeholder{width:100%;height:220px;}
+  .v2 .card .photo-placeholder svg{width:56px;height:56px;}
+  .v2 .card-body{padding:24px;}
+  .v2 .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .v2 .cat{font-size:13px;font-weight:700;color:var(--secondary);}
+  .v2 .card-title{font-size:20px;font-weight:700;margin:0 0 10px;color:var(--on-surface);}
+  .v2 .card-excerpt{
+    font-size:15px;color:var(--on-surface-variant);margin:0 0 18px;line-height:1.6;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .v2 .card-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--on-surface-variant);border-top:1px solid var(--outline-variant);padding-top:14px;}
+
+  .v2 .footer{padding:40px 20px;margin-top:16px;}
+  .v2 .footer-inner{max-width:1200px;margin:0 auto;font-size:13px;line-height:1.8;}
+  .v2 .foot-brand{font-size:16px;display:block;margin-bottom:6px;}
+
+  /* =========================================================
+     안 3 · 균형형 — 정보 밀도 중간 / 사진 중간 / 현황 요약형 히어로
+     ========================================================= */
+  .v3{background:var(--bg);}
+  .v3 .header{max-width:1200px;margin:0 auto;padding:18px 20px;}
+  .v3 .brand img{width:32px;height:32px;}
+  .v3 .brand span{font-size:16px;margin-left:9px;}
+
+  .v3 .hero{max-width:1200px;margin:0 auto;padding:4px 20px 0;}
+  .v3 .hero-panel{
+    background:var(--surface);border:1px solid var(--outline-variant);
+    border-radius:16px;padding:28px;box-shadow:var(--shadow-sm);
+    display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
+  }
+  .v3 .hero-text h1{font-size:22px;font-weight:700;margin:0 0 6px;color:var(--on-bg);}
+  .v3 .hero-text p{font-size:14px;margin:0;color:var(--on-surface-variant);line-height:1.6;max-width:420px;}
+  .v3 .hero-stats{display:flex;gap:24px;}
+  .v3 .stat{text-align:center;}
+  .v3 .stat b{display:block;font-size:24px;font-weight:700;color:var(--on-bg);}
+  .v3 .stat.is-done b{color:var(--primary);}
+  .v3 .stat span{font-size:12px;color:var(--on-surface-variant);}
+  .v3 .hero-cta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .v3 .hero .btn-primary{padding:12px 22px;font-size:15px;}
+
+  .v3 .filters{max-width:1200px;margin:0 auto;padding:24px 20px 0;}
+  .v3 .status-tabs{gap:8px;margin-bottom:14px;}
+  .v3 .status-tab{padding:8px 16px;font-size:14px;display:flex;align-items:center;gap:6px;}
+  .v3 .status-tab .count{
+    background:rgba(43,36,56,.08);border-radius:9999px;padding:1px 7px;font-size:12px;
+  }
+  .v3 .status-tab.active .count{background:rgba(43,36,56,.18);}
+  .v3 .category-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;}
+  .v3 .category-chip{padding:7px 14px;font-size:13px;white-space:nowrap;}
+
+  .v3 .list-section{max-width:1200px;margin:0 auto;padding:20px 20px 48px;}
+  .v3 .card-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  @media(min-width:768px){ .v3 .card-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(min-width:1024px){ .v3 .card-grid{grid-template-columns:repeat(3,1fr);gap:20px;} }
+
+  .v3 .card{
+    display:flex;gap:14px;background:var(--surface);
+    border:1px solid var(--outline-variant);border-radius:16px;
+    padding:16px;box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s ease;
+  }
+  .v3 .card:hover{box-shadow:var(--shadow-md);}
+  .v3 .card .photo-placeholder{width:96px;height:96px;border-radius:12px;}
+  .v3 .card .photo-placeholder svg{width:32px;height:32px;}
+  .v3 .card-body{min-width:0;flex:1;display:flex;flex-direction:column;}
+  .v3 .cat{font-size:12px;font-weight:700;color:var(--secondary);margin-bottom:4px;}
+  .v3 .card-title{font-size:16px;font-weight:700;margin:0 0 6px;color:var(--on-surface);}
+  .v3 .card-excerpt{
+    font-size:13px;color:var(--on-surface-variant);margin:0 0 10px;line-height:1.5;flex:1;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .v3 .card-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--on-surface-variant);}
+
+  .v3 .footer{padding:28px 20px;margin-top:8px;}
+  .v3 .footer-inner{max-width:1200px;margin:0 auto;font-size:12px;line-height:1.7;}
+  .v3 .foot-brand{font-size:14px;display:block;margin-bottom:4px;}
+
+  /* 모바일 공통 보정 */
+  @media(max-width:480px){
+    .v2 .hero-panel{padding:28px 20px;}
+    .v2 .hero-panel h1{font-size:24px;}
+    .v2 .hero-icon{width:80px;height:80px;}
+    .v2 .hero-icon img{width:44px;height:44px;}
+    .v3 .hero-panel{flex-direction:column;align-items:stretch;}
+    .v3 .hero-stats{justify-content:space-between;}
+    .v3 .hero-cta{align-items:stretch;}
+    .v3 .hero-cta .btn-primary{width:100%;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- 시안 전환 스위처 (실제 서비스 화면이 아닌, 비교용 도구) -->
+  <div class="switcher">
+    <div class="switcher-inner">
+      <span class="switcher-title">홈 화면 시안</span>
+      <div class="switcher-tabs">
+        <button data-target="v1" class="active">안 1 · 정보 우선형</button>
+        <button data-target="v2">안 2 · 이야기 중심형</button>
+        <button data-target="v3">안 3 · 균형형</button>
+      </div>
+      <span class="switcher-note" id="switcherNote">정보 밀도 높음 · 사진 작게 · 차분한 안내 톤</span>
+    </div>
+  </div>
+
+  <!-- 사진 placeholder 아이콘 -->
+  <template id="photoIcon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="8.5" cy="10" r="1.6" fill="currentColor"/>
+      <path d="M3 16l5-4 4 3 3-2.5L21 16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+  </template>
+
+  <!-- =========================================================
+       안 1 · 정보 우선형
+       ========================================================= -->
+  <main class="screen active v1" id="v1">
+    <header class="header">
+      <div class="brand">
+        <img src="data:image/png;base64,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" alt="위스테이 청소년센터 아이콘">
+        <span>위스테이 청소년센터</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1>동네에서 있었던 일, 여기에 남겨주세요</h1>
+          <p>주민이 남긴 이야기를 모아 확인하고 처리 과정을 알려드립니다. 접수 → 처리중 → 완료 순서로 진행 상황을 확인할 수 있어요.</p>
+        </div>
+        <button class="btn-primary">의견 남기기</button>
+      </div>
+    </section>
+
+    <section class="filters">
+      <div class="status-tabs">
+        <button class="status-tab active">전체</button>
+        <button class="status-tab">접수</button>
+        <button class="status-tab">처리중</button>
+        <button class="status-tab">완료</button>
+      </div>
+      <div class="category-row">
+        <button class="category-chip active">전체</button>
+        <button class="category-chip">안전</button>
+        <button class="category-chip">시설</button>
+        <button class="category-chip">놀이터</button>
+        <button class="category-chip">환경</button>
+        <button class="category-chip">소음</button>
+        <button class="category-chip">교통</button>
+      </div>
+    </section>
+
+    <section class="list-section">
+      <p class="section-label">전체 5건</p>
+      <div class="card-grid" id="grid-v1"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="foot-brand">위스테이 청소년센터</p>
+        <p>남양주 별내에서 청소년의 방과 후를 돌보고 동네 일을 함께 챙기는 마을 공간입니다.</p>
+        <p>© 위스테이 청소년센터</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- =========================================================
+       안 2 · 이야기 중심형
+       ========================================================= -->
+  <main class="screen v2" id="v2">
+    <header class="header">
+      <div class="brand">
+        <img src="data:image/png;base64,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" alt="위스테이 청소년센터 아이콘">
+        <span>위스테이 청소년센터</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-panel">
+        <div>
+          <h1>동네 이야기를 남기면, 우리가 함께 살펴봅니다</h1>
+          <p>불편했던 일이나 바라는 점을 편하게 적어주세요. 접수부터 처리 완료까지, 진행 상황을 이 화면에서 계속 확인할 수 있어요.</p>
+          <button class="btn-primary">의견 남기기</button>
+        </div>
+        <div class="hero-icon"><img src="data:image/png;base64,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" alt=""></div>
+      </div>
+    </section>
+
+    <section class="filters">
+      <p class="filters-label">둘러보기</p>
+      <div class="status-tabs">
+        <button class="status-tab active">전체</button>
+        <button class="status-tab">접수</button>
+        <button class="status-tab">처리중</button>
+        <button class="status-tab">완료</button>
+      </div>
+      <div class="category-row">
+        <button class="category-chip active">전체</button>
+        <button class="category-chip">안전</button>
+        <button class="category-chip">시설</button>
+        <button class="category-chip">놀이터</button>
+        <button class="category-chip">환경</button>
+        <button class="category-chip">소음</button>
+        <button class="category-chip">교통</button>
+      </div>
+    </section>
+
+    <section class="list-section">
+      <div class="card-grid" id="grid-v2"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="foot-brand">위스테이 청소년센터</span>
+        <p>남양주 별내에서 청소년의 방과 후를 돌보고 동네 일을 함께 챙기는 마을 공간입니다.<br>© 위스테이 청소년센터</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- =========================================================
+       안 3 · 균형형
+       ========================================================= -->
+  <main class="screen v3" id="v3">
+    <header class="header">
+      <div class="brand">
+        <img src="data:image/png;base64,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" alt="위스테이 청소년센터 아이콘">
+        <span>위스테이 청소년센터</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-panel">
+        <div class="hero-text">
+          <h1>우리 동네 목소리함</h1>
+          <p>주민이 남긴 이야기를 모아 처리하고, 어떻게 처리됐는지 알려드려요.</p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b>2</b><span>접수</span></div>
+          <div class="stat"><b>2</b><span>처리중</span></div>
+          <div class="stat is-done"><b>1</b><span>완료</span></div>
+        </div>
+        <div class="hero-cta">
+          <button class="btn-primary">의견 남기기</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters">
+      <div class="status-tabs">
+        <button class="status-tab active">전체 <span class="count">5</span></button>
+        <button class="status-tab">접수 <span class="count">2</span></button>
+        <button class="status-tab">처리중 <span class="count">2</span></button>
+        <button class="status-tab">완료 <span class="count">1</span></button>
+      </div>
+      <div class="category-row">
+        <button class="category-chip active">전체</button>
+        <button class="category-chip">안전</button>
+        <button class="category-chip">시설</button>
+        <button class="category-chip">놀이터</button>
+        <button class="category-chip">환경</button>
+        <button class="category-chip">소음</button>
+        <button class="category-chip">교통</button>
+      </div>
+    </section>
+
+    <section class="list-section">
+      <div class="card-grid" id="grid-v3"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="foot-brand">위스테이 청소년센터</span>
+        <p>남양주 별내에서 청소년의 방과 후를 돌보고 동네 일을 함께 챙기는 마을 공간입니다.</p>
+        <p>© 위스테이 청소년센터</p>
+      </div>
+    </footer>
+  </main>
+
+<script>
+  // ---- 샘플 데이터 (접수/처리중/완료가 섞이도록) ----
+  const posts = [
+    {
+      title: "골목 가로등이 며칠째 꺼져 있어요",
+      excerpt: "밤에 골목이 너무 어두워서 걸어다니기 무서워요. 순찰차 라이트 말고는 아예 안 보일 정도라 빠른 확인 부탁드려요.",
+      status: "접수", category: "안전", author: "별내동 주민", date: "2026.08.18"
+    },
+    {
+      title: "행복놀이터 그네가 삐걱거려요",
+      excerpt: "그네를 탈 때마다 쇠 부딪히는 소리가 크게 나요. 아이들이 타는 곳이라 안전 점검이 필요할 것 같아요.",
+      status: "처리중", category: "놀이터", author: "김OO", date: "2026.08.15"
+    },
+    {
+      title: "재활용 분리수거장이 많이 지저분해요",
+      excerpt: "요 며칠 분리수거장 주변에 쓰레기가 쌓여 있어요. 수거 주기를 한 번 확인해주시면 좋겠습니다.",
+      status: "접수", category: "환경", author: "이OO", date: "2026.08.14"
+    },
+    {
+      title: "버스정류장 지붕 일부가 부서졌어요",
+      excerpt: "정류장 지붕 한쪽이 깨져서 비 오는 날 그대로 비를 맞아요. 이용하는 어르신들이 많은 곳이라 걱정됩니다.",
+      status: "처리중", category: "시설", author: "박OO", date: "2026.08.10"
+    },
+    {
+      title: "공원 벤치, 새로 칠해주셔서 감사해요",
+      excerpt: "지난번에 남긴 의견 덕분에 벤치가 깔끔해졌어요. 앉을 때마다 기분이 좋아요. 신경 써주셔서 감사합니다.",
+      status: "완료", category: "시설", author: "최OO", date: "2026.08.02"
+    }
+  ];
+
+  function badgeClass(status){
+    return status === "완료" ? "badge badge-done" : "badge badge-progress";
+  }
+
+  function renderGrid(gridId, layout){
+    const grid = document.getElementById(gridId);
+    const iconHTML = document.getElementById('photoIcon').innerHTML;
+    grid.innerHTML = posts.map(p => `
+      <article class="card">
+        <div class="photo-placeholder">${iconHTML}</div>
+        <div class="card-body">
+          <div class="card-top">
+            ${layout === 'v1' ? `<span class="${badgeClass(p.status)}">${p.status}</span>` : ''}
+            ${layout === 'v2' ? `<span class="cat">${p.category}</span><span class="${badgeClass(p.status)}">${p.status}</span>` : ''}
+            ${layout === 'v3' ? `<span class="${badgeClass(p.status)}">${p.status}</span>` : ''}
+          </div>
+          ${layout === 'v3' ? `<span class="cat">${p.category}</span>` : ''}
+          <h3 class="card-title">${p.title}</h3>
+          <p class="card-excerpt">${p.excerpt}</p>
+          <div class="card-meta">
+            ${layout === 'v1' ? `<span class="cat">${p.category}</span><span>·</span><span>${p.author}</span><span>·</span><span>${p.date}</span>` : ''}
+            ${layout === 'v2' ? `<span>${p.author}</span><span>${p.date}</span>` : ''}
+            ${layout === 'v3' ? `<span>${p.author}</span><span>${p.date}</span>` : ''}
+          </div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  renderGrid('grid-v1', 'v1');
+  renderGrid('grid-v2', 'v2');
+  renderGrid('grid-v3', 'v3');
+
+  // ---- 탭 전환 ----
+  const notes = {
+    v1: "정보 밀도 높음 · 사진 작게 · 차분한 안내 톤",
+    v2: "정보 밀도 낮음(여유) · 사진 크게 · 강한 한 줄 히어로",
+    v3: "정보 밀도 중간 · 사진 중간 · 현황 요약형 히어로"
+  };
+  const tabButtons = document.querySelectorAll('.switcher-tabs button');
+  const screens = document.querySelectorAll('.screen');
+  const noteEl = document.getElementById('switcherNote');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+      screens.forEach(s => s.classList.toggle('active', s.id === target));
+      noteEl.textContent = notes[target];
+      window.scrollTo({top:0, behavior:'instant'});
+    });
+  });
+</script>
+</body>
+</html>

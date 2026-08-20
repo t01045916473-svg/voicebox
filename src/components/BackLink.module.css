@@ -1,0 +1,17 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface);
+  color: var(--on-surface);
+  border: 1px solid var(--outline);
+  border-radius: var(--rounded-default);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.link:hover {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}

@@ -1,0 +1,28 @@
+.header {
+  background: var(--background);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px var(--spacing-margin);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--rounded-sm);
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-left: 8px;
+  color: var(--on-background);
+}

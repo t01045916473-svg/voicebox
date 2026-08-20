@@ -1,0 +1,88 @@
+:root {
+  /* Colors — DESIGN.md */
+  --background: #FFF9F0;
+  --on-background: #2B2438;
+  --surface: #FFFFFF;
+  --surface-container: #FFF3E2;
+  --surface-container-high: #FDEEDB;
+  --on-surface: #2B2438;
+  --on-surface-variant: #5C5566;
+  --outline: #E4DEE0;
+  --outline-variant: #EFEAEB;
+  --primary: #FF7A59;
+  --on-primary: #2B2438;
+  --primary-container: #FFE4DA;
+  --on-primary-container: #2B2438;
+  --secondary: #8A8296;
+  --on-secondary: #FFFFFF;
+  --secondary-container: #ECE9EF;
+  --on-secondary-container: #2B2438;
+  --error: #D14343;
+  --on-error: #FFFFFF;
+  --error-container: #FDE3E1;
+  --on-error-container: #7A241F;
+
+  /* Shadow */
+  --shadow-sm: 0px 2px 8px rgba(43, 36, 56, 0.08);
+  --shadow-md: 0px 8px 24px rgba(43, 36, 56, 0.12);
+
+  /* Rounded */
+  --rounded-sm: 8px;
+  --rounded-default: 12px;
+  --rounded-md: 16px;
+  --rounded-lg: 20px;
+  --rounded-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-margin: 20px;
+
+  /* Typography */
+  --font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--background);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input, textarea {
+  font-family: inherit;
+}

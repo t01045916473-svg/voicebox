@@ -1,0 +1,23 @@
+.tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  border: 1px solid var(--outline);
+  background: var(--surface);
+  color: var(--on-surface);
+  border-radius: var(--rounded-full);
+  padding: 6px 12px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.active {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+  font-weight: 700;
+}
