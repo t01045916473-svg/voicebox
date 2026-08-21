@@ -61,6 +61,12 @@
   gap: 8px;
 }
 
+.error {
+  font-size: 14px;
+  color: var(--error);
+  margin: 0;
+}
+
 .submitRow {
   display: flex;
   justify-content: flex-end;
@@ -82,6 +88,11 @@
 .submit:hover {
   background: var(--primary-container);
   color: var(--on-primary-container);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media (max-width: 480px) {
