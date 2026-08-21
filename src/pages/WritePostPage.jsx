@@ -8,12 +8,13 @@ import PhotoUpload from '../components/PhotoUpload.jsx'
 import CategoryChip from '../components/CategoryChip.jsx'
 import { CATEGORIES } from '../data/categories.js'
 import { createOpinion } from '../lib/opinions.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export default function WritePostPage() {
   const navigate = useNavigate()
+  const { user, profile } = useAuth()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
   const [category, setCategory] = useState(null)
   const [photoFile, setPhotoFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -33,21 +34,24 @@ export default function WritePostPage() {
   async function handleSubmit(e) {
     e.preventDefault()
 
-    if (!title.trim() || !content.trim() || !author.trim() || !category) {
-      setError('제목, 내용, 작성자, 분야를 모두 입력해주세요.')
+    if (!title.trim() || !content.trim() || !category) {
+      setError('제목, 내용, 분야를 모두 입력해주세요.')
       return
     }
 
     setSubmitting(true)
     setError(null)
 
+    const author = profile?.nickname || user.user_metadata?.full_name || user.user_metadata?.name || '이웃'
+
     try {
       await createOpinion({
         title: title.trim(),
         content: content.trim(),
-        author: author.trim(),
+        author,
         category,
         photoFile,
+        userId: user.id,
       })
       navigate('/')
     } catch {
@@ -93,20 +97,6 @@ export default function WritePostPage() {
               placeholder="겪은 일이나 바라는 점을 자세히 적어주세요"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="author">
-              작성자
-            </label>
-            <input
-              id="author"
-              type="text"
-              className={styles.input}
-              placeholder="이름 또는 닉네임을 적어주세요"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
             />
           </div>
 

@@ -6,6 +6,10 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 14px var(--spacing-margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 
 .brand {
@@ -25,4 +29,36 @@
   line-height: 24px;
   margin-left: 8px;
   color: var(--on-background);
+}
+
+.authNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.authButton {
+  background: var(--surface);
+  color: var(--on-surface);
+  border: 1px solid var(--outline);
+  border-radius: var(--rounded-default);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+}
+
+.avatarLink {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rounded-full);
+  border: 1px solid var(--outline);
+  object-fit: cover;
 }

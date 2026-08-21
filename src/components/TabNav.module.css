@@ -1,0 +1,22 @@
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--outline-variant);
+  margin-bottom: var(--spacing-md);
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--on-surface-variant);
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.active {
+  color: var(--on-background);
+  border-bottom-color: var(--primary);
+}

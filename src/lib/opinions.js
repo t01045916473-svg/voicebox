@@ -42,6 +42,16 @@ export async function fetchOpinionById(id) {
   return data ? toPost(data) : null
 }
 
+export async function fetchOpinionsByUser(userId) {
+  const { data, error } = await supabase
+    .from('opinions')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data.map(toPost)
+}
+
 async function uploadOpinionPhoto(file) {
   const ext = file.name.split('.').pop()
   const path = `${crypto.randomUUID()}.${ext}`
@@ -51,12 +61,12 @@ async function uploadOpinionPhoto(file) {
   return data.publicUrl
 }
 
-export async function createOpinion({ title, content, author, category, photoFile }) {
+export async function createOpinion({ title, content, author, category, photoFile, userId }) {
   const photo_url = photoFile ? await uploadOpinionPhoto(photoFile) : null
 
   const { data, error } = await supabase
     .from('opinions')
-    .insert({ title, content, author, category, photo_url })
+    .insert({ title, content, author, category, photo_url, user_id: userId })
     .select()
     .single()
   if (error) throw error

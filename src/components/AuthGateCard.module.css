@@ -1,0 +1,45 @@
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-margin);
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-xl);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  color: var(--on-background);
+  margin: 0 0 8px;
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--on-surface-variant);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.switch {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--on-surface-variant);
+  text-align: center;
+  margin: var(--spacing-md) 0 0;
+}
+
+.switchLink {
+  color: var(--primary);
+  font-weight: 600;
+}
