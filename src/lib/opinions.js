@@ -45,9 +45,9 @@ export async function fetchOpinionById(id) {
 async function uploadOpinionPhoto(file) {
   const ext = file.name.split('.').pop()
   const path = `${crypto.randomUUID()}.${ext}`
-  const { error } = await supabase.storage.from('opinion-photos').upload(path, file)
+  const { error } = await supabase.storage.from('photos').upload(path, file)
   if (error) throw error
-  const { data } = supabase.storage.from('opinion-photos').getPublicUrl(path)
+  const { data } = supabase.storage.from('photos').getPublicUrl(path)
   return data.publicUrl
 }
 
